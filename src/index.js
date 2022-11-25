@@ -62,6 +62,7 @@ class Game extends React.Component {
       history : [{
         squares: Array(DIMENSION*DIMENSION).fill(null),
         numEmptySquares: DIMENSION*DIMENSION,
+        lastSelectedSquare: null,
       }],
       ascendingMoves: true,
       stepNumber: 0,
@@ -74,8 +75,9 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const [winner, winningSquares] = calculateWinner(current.squares);
     const moves = history.map((step, move)=>{
+      const selectedSquare = step.lastSelectedSquare;
       const desc = move ?
-        'Go to move #'+move +' (row: '+ ((move%DIMENSION===0)?DIMENSION:move%DIMENSION) + ', col: '+Math.floor(move/DIMENSION)+')':
+        'Go to move #'+move +' (row: '+ Math.ceil((selectedSquare)/DIMENSION) + ', col: '+((selectedSquare%DIMENSION===0)?DIMENSION:selectedSquare%DIMENSION)+')':
         'Go to game start';
       return(
         <li key={move}>
@@ -108,6 +110,7 @@ class Game extends React.Component {
     );
   }
   handleClick(i){
+    console.log(i);
     const history = this.state.history.slice(0,this.state.stepNumber+1);
     const current = history[history.length-1];
     const squares = current.squares.slice();
@@ -116,7 +119,7 @@ class Game extends React.Component {
 
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
-      history: history.concat([{squares: squares, numEmptySquares: current.numEmptySquares-1}]),
+      history: history.concat([{squares: squares, numEmptySquares: current.numEmptySquares-1, lastSelectedSquare:i+1}]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext
     });
