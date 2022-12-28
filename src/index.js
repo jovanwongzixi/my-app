@@ -25,7 +25,7 @@ function Square(props){
   let bgColor= "#fff";
   if(props.winningSquare) bgColor = "#00ff00";
   return (
-    <button style = {{background: bgColor}} className="square" onClick={props.onClick}>
+    <button id={'btn'+props.id}style = {{background: bgColor}} className="square" onClick={props.onClick}>
       {props.value}
     </button>
   )
@@ -38,6 +38,7 @@ class Board extends React.Component {
               onClick = {()=>this.props.onClick(i)}
               key = {i}
               winningSquare = {this.props.winningSquares.includes(i)}
+              id = {i}
             />);
   }
 
@@ -110,7 +111,6 @@ class Game extends React.Component {
     );
   }
   handleClick(i){
-    console.log(i);
     const history = this.state.history.slice(0,this.state.stepNumber+1);
     const current = history[history.length-1];
     const squares = current.squares.slice();
